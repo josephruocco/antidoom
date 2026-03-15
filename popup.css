@@ -1,0 +1,123 @@
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, #ffe7a7, transparent 45%),
+    linear-gradient(160deg, #fff8dc 0%, #f6d878 100%);
+  color: #171717;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.panel {
+  width: 300px;
+  padding: 18px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.logo {
+  display: inline-block;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-size: 54px;
+  letter-spacing: -0.05em;
+  text-transform: capitalize;
+  color: #5be7ff;
+  background: linear-gradient(180deg, #d8fbff 0%, #78ecff 38%, #008dff 39%, #0059d6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  transform: perspective(300px) rotateX(18deg) skewX(-12deg);
+  -webkit-text-stroke: 1.5px #05316f;
+  text-shadow:
+    2px 2px 0 #ffffff,
+    5px 5px 0 #1f4b97,
+    8px 8px 0 rgba(255, 255, 255, 0.95),
+    11px 11px 0 #7f7f7f;
+}
+
+.intro,
+.footer,
+.value {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.toggle input {
+  width: 18px;
+  height: 18px;
+}
+
+input[type="range"] {
+  width: 124px;
+  accent-color: #171717;
+}
+
+.test-button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 2px solid #171717;
+  border-radius: 10px;
+  background: #171717;
+  color: #fff8dc;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.demo-button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 11px 14px;
+  border: 2px dashed #171717;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.45);
+  color: #171717;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.status {
+  min-height: 20px;
+  margin: 10px 0 0;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AntiDoom Demo</title>
+    <link rel="stylesheet" href="demo.css">
+  </head>
+  <body>
+    <main class="demo-shell">
+      <section class="hero">
+        <p class="eyebrow">Demo Landing Page</p>
+        <h1 class="logo" aria-label="AntiDoom">AntiDoom</h1>
+        <p class="lede">A showroom full of obnoxious fake ads that are weirdly on your side.</p>
+        <div class="hero-actions">
+          <button id="spawnOne" class="hero-button hero-button-primary" type="button">Launch random popup</button>
+          <button id="shuffleGrid" class="hero-button hero-button-secondary" type="button">Shuffle examples</button>
+        </div>
+      </section>
+
+      <section class="control-panel">
+        <div class="control-card">
+          <h2>Ad Controls</h2>
+          <label class="control-field" for="positionSelect">
+            <span>Where should the popup appear?</span>
+            <select id="positionSelect">
+              <option value="random">Random every time</option>
+              <option value="bottom-right">Bottom right</option>
+              <option value="bottom-left">Bottom left</option>
+              <option value="top-right">Top right</option>
+              <option value="top-left">Top left</option>
+              <option value="center">Center</option>
+            </select>
+          </label>
+          <label class="control-toggle">
+            <input id="floatToggle" type="checkbox">
+            <span>Let the popup float around</span>
+          </label>
+          <label class="control-toggle">
+            <input id="spamToggle" type="checkbox">
+            <span>Spam me with ads</span>
+          </label>
+          <label class="control-field" for="spamSpeed">
+            <span>Spam speed</span>
+            <input id="spamSpeed" type="range" min="600" max="3000" step="200" value="1400">
+          </label>
+          <p class="control-value"><span id="spamSpeedValue">1400</span> ms between popups</p>
+          <label class="control-field" for="spamCount">
+            <span>Max ads open at once</span>
+            <input id="spamCount" type="range" min="1" max="12" step="1" value="5">
+          </label>
+          <p class="control-value"><span id="spamCountValue">5</span> open popups</p>
+        </div>
+
+        <div class="control-card">
+          <h2>Make Your Own Ad</h2>
+          <label class="control-field" for="customKicker">
+            <span>Kicker</span>
+            <input id="customKicker" type="text" maxlength="40" placeholder="Family Plan Upgrade">
+          </label>
+          <label class="control-field" for="customMessage">
+            <span>Headline</span>
+            <textarea id="customMessage" rows="2" maxlength="80" placeholder="Call your Mom."></textarea>
+          </label>
+          <label class="control-field" for="customSubtext">
+            <span>Subtext</span>
+            <textarea id="customSubtext" rows="3" maxlength="140" placeholder="It is a better use of your phone than whatever this is."></textarea>
+          </label>
+          <label class="control-field" for="customPhoto">
+            <span>Upload photo</span>
+            <input id="customPhoto" type="file" accept="image/*">
+          </label>
+          <div class="custom-actions">
+            <button id="previewCustom" class="hero-button hero-button-secondary" type="button">Preview custom popup</button>
+            <button id="addCustom" class="hero-button hero-button-primary" type="button">Add to ad mix</button>
+          </div>
+          <p id="customStatus" class="control-value"></p>
+        </div>
+      </section>
+
+      <section class="billboard-row" id="billboardRow"></section>
+
+      <section class="grid-header">
+        <h2>Example Ad Units</h2>
+        <p>Different shapes, same agenda: interrupt the spiral with something sharper than generic positivity.</p>
+      </section>
+
+      <section class="ad-grid" id="adGrid"></section>
+    </main>
+
+    <template id="popupTemplate">
+      <section class="floating-root">
+        <div class="floating-card" role="dialog" aria-live="polite" aria-label="Example AntiDoom popup">
+          <div class="floating-header">
+            <span>Sponsored by your future self</span>
+            <button class="floating-close" type="button" aria-label="Dismiss">&times;</button>
+          </div>
+          <div class="floating-body">
+            <div class="floating-image-wrap is-hidden">
+              <img class="floating-image" alt="Custom ad image">
+            </div>
+            <div class="floating-kicker"></div>
+            <p class="floating-message"></p>
+            <p class="floating-subtext"></p>
+          </div>
+          <div class="floating-footer">
+            <button class="floating-button floating-button-primary" type="button">Close this tab</button>
+            <button class="floating-button floating-button-secondary" type="button">Go learn something</button>
+          </div>
+        </div>
+      </section>
+    </template>
+
+    <section id="celebrationOverlay" class="celebration-overlay is-hidden" aria-live="polite">
+      <div class="celebration-card">
+        <p class="celebration-eyebrow">Decision confirmed</p>
+        <h2 class="celebration-title">Life: slightly redeemed.</h2>
+        <p class="celebration-copy">You rejected the sludge and selected a better timeline.</p>
+        <div class="celebration-reel" id="celebrationReel"></div>
+        <button id="celebrationClose" class="hero-button hero-button-primary" type="button">Return to your upgraded life</button>
+      </div>
+    </section>
+
+    <script src="demo.js"></script>
+  </body>
+</html>
