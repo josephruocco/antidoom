@@ -10,7 +10,6 @@ const maxPopupsInput = document.getElementById("maxPopups");
 const intervalValue = document.getElementById("intervalValue");
 const maxPopupsValue = document.getElementById("maxPopupsValue");
 const testPopupButton = document.getElementById("testPopup");
-const openDemoButton = document.getElementById("openDemo");
 const statusText = document.getElementById("status");
 
 function setStatus(message) {
@@ -124,8 +123,4 @@ testPopupButton.addEventListener("click", async () => {
       setStatus("Refresh the page, then click again.");
     }
   }
-});
-
-openDemoButton.addEventListener("click", async () => {
-  await chrome.tabs.create({ url: chrome.runtime.getURL("demo.html") });
 });

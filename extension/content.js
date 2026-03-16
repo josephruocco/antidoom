@@ -6,6 +6,16 @@ const DEFAULT_SETTINGS = {
 
 const FIRST_POPUP_SCROLL_DISTANCE = 900;
 const REPEAT_POPUP_SCROLL_DISTANCE = 2400;
+const DISTRACTING_HOST_PATTERNS = [
+  "reddit.com",
+  "youtube.com",
+  "x.com",
+  "twitter.com",
+  "instagram.com",
+  "tiktok.com",
+  "facebook.com",
+  "news.ycombinator.com"
+];
 
 const ADS = [
   {
@@ -62,6 +72,13 @@ let lastScrollY = window.scrollY;
 let lastPopupAt = Date.now() - DEFAULT_SETTINGS.intervalMinutes * 60 * 1000;
 let snoozedUntil = 0;
 let activeRoot = null;
+
+function isDistractingSite() {
+  const hostname = window.location.hostname.toLowerCase();
+  return DISTRACTING_HOST_PATTERNS.some(
+    (pattern) => hostname === pattern || hostname.endsWith(`.${pattern}`)
+  );
+}
 
 function pickEducationalUrl() {
   const urls = [
@@ -224,4 +241,7 @@ chrome.runtime.onMessage.addListener((message) => {
 window.antidoomForceShowPopup = forceShowPopup;
 
 readSettings();
-window.addEventListener("scroll", onScroll, { passive: true });
+
+if (isDistractingSite()) {
+  window.addEventListener("scroll", onScroll, { passive: true });
+}
