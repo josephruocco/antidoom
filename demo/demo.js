@@ -322,7 +322,9 @@ spamSpeedValue.textContent = String(state.spamSpeed);
 spamCountValue.textContent = String(state.spamCount);
 positionSelect.value = state.position;
 
-spawnOneButton.addEventListener("click", spawnPopup);
+spawnOneButton.addEventListener("click", () => {
+  spawnPopup();
+});
 shuffleGridButton.addEventListener("click", () => {
   refreshShowcase();
 });
