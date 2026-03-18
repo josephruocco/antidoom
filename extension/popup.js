@@ -4,6 +4,17 @@ const DEFAULT_SETTINGS = {
   maxPopupsPerPage: 4
 };
 
+const DISTRACTING_HOST_PATTERNS = [
+  "reddit.com",
+  "youtube.com",
+  "x.com",
+  "twitter.com",
+  "instagram.com",
+  "tiktok.com",
+  "facebook.com",
+  "news.ycombinator.com"
+];
+
 const enabledInput = document.getElementById("enabled");
 const intervalInput = document.getElementById("interval");
 const maxPopupsInput = document.getElementById("maxPopups");
@@ -28,6 +39,17 @@ function saveSettings() {
     maxPopupsPerPage: Number(maxPopupsInput.value)
   });
   syncLabels();
+}
+
+function isDistractingUrl(url) {
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+    return DISTRACTING_HOST_PATTERNS.some(
+      (pattern) => hostname === pattern || hostname.endsWith(`.${pattern}`)
+    );
+  } catch {
+    return false;
+  }
 }
 
 function injectContentAssets(tabId) {
@@ -108,6 +130,11 @@ testPopupButton.addEventListener("click", async () => {
 
   if (!tab.url || /^chrome:|^chrome-extension:|^edge:|^about:/.test(tab.url)) {
     setStatus("Open a normal website tab first.");
+    return;
+  }
+
+  if (!isDistractingUrl(tab.url)) {
+    setStatus("Test popup only works on distracting sites.");
     return;
   }
 
