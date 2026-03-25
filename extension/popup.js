@@ -52,6 +52,20 @@ function isDistractingUrl(url) {
   }
 }
 
+function checkAlreadyInjected(tabId) {
+  return new Promise((resolve) => {
+    chrome.scripting.executeScript(
+      {
+        target: { tabId },
+        func: () => typeof window.antidoomForceShowPopup === "function"
+      },
+      (results) => {
+        resolve(!chrome.runtime.lastError && results?.[0]?.result === true);
+      }
+    );
+  });
+}
+
 function injectContentAssets(tabId) {
   return new Promise((resolve, reject) => {
     chrome.scripting.insertCSS(
@@ -139,15 +153,13 @@ testPopupButton.addEventListener("click", async () => {
   }
 
   try {
+    const alreadyInjected = await checkAlreadyInjected(tab.id);
+    if (!alreadyInjected) {
+      await injectContentAssets(tab.id);
+    }
     await runTestPopup(tab.id);
     setStatus("Popup sent.");
   } catch (error) {
-    try {
-      await injectContentAssets(tab.id);
-      await runTestPopup(tab.id);
-      setStatus("Tab needed a refresh. Test popup sent.");
-    } catch (retryError) {
-      setStatus("Refresh the page, then click again.");
-    }
+    setStatus("Refresh the page, then click again.");
   }
 });

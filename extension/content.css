@@ -6,6 +6,18 @@
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
 }
 
+.antidoom-root:has(.antidoom-card) {
+  box-sizing: border-box;
+}
+
+[data-antidoom-host="true"] > .antidoom-root {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
 .antidoom-card {
   width: min(388px, calc(100vw - 24px));
   color: #171717;
@@ -17,6 +29,14 @@
   overflow: hidden;
   transform-origin: bottom right;
   animation: antidoom-burst-in 280ms cubic-bezier(0.2, 0.9, 0.2, 1.15);
+}
+
+[data-antidoom-host="true"] > .antidoom-root .antidoom-card {
+  width: 100%;
+  min-height: 100%;
+  border-radius: 0;
+  box-shadow: none;
+  transform-origin: center;
 }
 
 .antidoom-header {
@@ -91,6 +111,7 @@
   display: flex;
   gap: 8px;
   padding: 0 16px 16px;
+  flex-wrap: wrap;
 }
 
 .antidoom-button {
@@ -115,6 +136,13 @@
 .antidoom-button-secondary {
   background: rgba(255, 255, 255, 0.4);
   color: #171717;
+}
+
+.antidoom-button-snooze {
+  background: transparent;
+  color: rgba(23, 23, 23, 0.55);
+  border-color: rgba(23, 23, 23, 0.3);
+  font-size: 11px;
 }
 
 .antidoom-close {

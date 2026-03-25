@@ -6,6 +6,22 @@ const DEFAULT_SETTINGS = {
 
 const FIRST_POPUP_SCROLL_DISTANCE = 900;
 const REPEAT_POPUP_SCROLL_DISTANCE = 2400;
+const AD_SLOT_SELECTORS = [
+  '[id*="ad-"]',
+  '[id^="ad_"]',
+  '[id^="ad-"]',
+  '[class*="ad-slot"]',
+  '[class*="ad_slot"]',
+  '[class*="ad-container"]',
+  '[class*="adContainer"]',
+  '[class*="advert"]',
+  '[class*="banner"]',
+  '[data-testid*="ad"]',
+  '[data-ad]',
+  'aside[aria-label*="ad" i]',
+  'iframe[src*="doubleclick"]',
+  'iframe[src*="ads"]'
+];
 const DISTRACTING_HOST_PATTERNS = [
   "reddit.com",
   "youtube.com",
@@ -68,10 +84,13 @@ const ADS = [
 let settings = { ...DEFAULT_SETTINGS };
 let popupCount = 0;
 let scrollDistance = 0;
+let lastAdIndex = -1;
 let lastScrollY = window.scrollY;
 let lastPopupAt = Date.now() - DEFAULT_SETTINGS.intervalMinutes * 60 * 1000;
 let snoozedUntil = 0;
 let activeRoot = null;
+let activeHost = null;
+let previousHostPosition = "";
 
 function isDistractingSite() {
   const hostname = window.location.hostname.toLowerCase();
@@ -128,7 +147,11 @@ function shouldShowPopup() {
 }
 
 function pickAd() {
-  const index = Math.floor(Math.random() * ADS.length);
+  let index;
+  do {
+    index = Math.floor(Math.random() * ADS.length);
+  } while (index === lastAdIndex && ADS.length > 1);
+  lastAdIndex = index;
   return ADS[index];
 }
 
@@ -139,6 +162,18 @@ function destroyPopup() {
 
   activeRoot.remove();
   activeRoot = null;
+
+  if (activeHost?.dataset.antidoomHost === "true") {
+    if (previousHostPosition) {
+      activeHost.style.position = previousHostPosition;
+    } else {
+      activeHost.style.removeProperty("position");
+    }
+    delete activeHost.dataset.antidoomHost;
+  }
+
+  activeHost = null;
+  previousHostPosition = "";
 }
 
 function snoozePopups() {
@@ -162,6 +197,65 @@ function goLearnSomething() {
   });
 }
 
+function isVisibleBannerCandidate(element) {
+  if (!(element instanceof HTMLElement)) {
+    return false;
+  }
+
+  const rect = element.getBoundingClientRect();
+  const style = window.getComputedStyle(element);
+
+  if (
+    rect.width < 240 ||
+    rect.height < 90 ||
+    rect.width > window.innerWidth * 0.95 ||
+    rect.height > window.innerHeight * 0.8
+  ) {
+    return false;
+  }
+
+  if (
+    style.display === "none" ||
+    style.visibility === "hidden" ||
+    style.opacity === "0"
+  ) {
+    return false;
+  }
+
+  return rect.bottom > 0 && rect.top < window.innerHeight;
+}
+
+function findAdBannerHost() {
+  for (const selector of AD_SLOT_SELECTORS) {
+    const match = document.querySelector(selector);
+    if (isVisibleBannerCandidate(match)) {
+      return match;
+    }
+  }
+
+  return null;
+}
+
+function attachRoot(root) {
+  const host = findAdBannerHost();
+
+  if (!host) {
+    document.documentElement.appendChild(root);
+    activeHost = null;
+    previousHostPosition = "";
+    return;
+  }
+
+  previousHostPosition = host.style.position;
+  const computedPosition = window.getComputedStyle(host).position;
+  if (computedPosition === "static") {
+    host.style.position = "relative";
+  }
+  host.dataset.antidoomHost = "true";
+  host.appendChild(root);
+  activeHost = host;
+}
+
 function showPopup() {
   const ad = pickAd();
   const root = document.createElement("section");
@@ -181,6 +275,7 @@ function showPopup() {
       <div class="antidoom-footer">
         <button class="antidoom-button antidoom-button-primary" type="button" data-action="close-tab">Close this tab</button>
         <button class="antidoom-button antidoom-button-secondary" type="button" data-action="learn">Go learn something</button>
+        <button class="antidoom-button antidoom-button-snooze" type="button" data-action="snooze">Snooze 10 min</button>
       </div>
     </div>
   `;
@@ -188,12 +283,14 @@ function showPopup() {
   const closeButton = root.querySelector(".antidoom-close");
   const closeTabButton = root.querySelector('[data-action="close-tab"]');
   const learnButton = root.querySelector('[data-action="learn"]');
+  const snoozeButton = root.querySelector('[data-action="snooze"]');
 
   closeButton.addEventListener("click", destroyPopup);
   closeTabButton.addEventListener("click", requestCloseTab);
   learnButton.addEventListener("click", goLearnSomething);
+  snoozeButton.addEventListener("click", snoozePopups);
 
-  document.documentElement.appendChild(root);
+  attachRoot(root);
   activeRoot = root;
   popupCount += 1;
   lastPopupAt = Date.now();
