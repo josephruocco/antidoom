@@ -13,7 +13,14 @@
     "service_worker": "background.js"
   },
   "host_permissions": [
-    "<all_urls>"
+    "*://*.reddit.com/*",
+    "*://*.youtube.com/*",
+    "*://*.x.com/*",
+    "*://*.twitter.com/*",
+    "*://*.instagram.com/*",
+    "*://*.tiktok.com/*",
+    "*://*.facebook.com/*",
+    "*://news.ycombinator.com/*"
   ],
   "action": {
     "default_title": "AntiDoom",

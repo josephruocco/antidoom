@@ -99,16 +99,8 @@ function isDistractingSite() {
   );
 }
 
-function pickEducationalUrl() {
-  const urls = [
-    "https://en.wikipedia.org/wiki/Special:Random",
-    "https://www.khanacademy.org/",
-    "https://www.nationalgeographic.com/",
-    "https://www.smithsonianmag.com/",
-    "https://oyc.yale.edu/"
-  ];
-  return urls[Math.floor(Math.random() * urls.length)];
-}
+// Fallback URL used if the background service worker is unavailable.
+const FALLBACK_EDUCATIONAL_URL = "https://en.wikipedia.org/wiki/Special:Random";
 
 function readSettings() {
   chrome.storage.sync.get(DEFAULT_SETTINGS, (stored) => {
@@ -192,7 +184,7 @@ function requestCloseTab() {
 function goLearnSomething() {
   chrome.runtime.sendMessage({ type: "antidoom:open-educational-site" }, () => {
     if (chrome.runtime.lastError) {
-      window.location.href = pickEducationalUrl();
+      window.location.href = FALLBACK_EDUCATIONAL_URL;
     }
   });
 }
@@ -285,10 +277,10 @@ function showPopup() {
   const learnButton = root.querySelector('[data-action="learn"]');
   const snoozeButton = root.querySelector('[data-action="snooze"]');
 
-  closeButton.addEventListener("click", destroyPopup);
-  closeTabButton.addEventListener("click", requestCloseTab);
-  learnButton.addEventListener("click", goLearnSomething);
-  snoozeButton.addEventListener("click", snoozePopups);
+  closeButton.addEventListener("click", destroyPopup, { once: true });
+  closeTabButton.addEventListener("click", requestCloseTab, { once: true });
+  learnButton.addEventListener("click", goLearnSomething, { once: true });
+  snoozeButton.addEventListener("click", snoozePopups, { once: true });
 
   attachRoot(root);
   activeRoot = root;

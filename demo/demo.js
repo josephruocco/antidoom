@@ -139,11 +139,20 @@ function renderBillboards() {
   for (const ad of billboards) {
     const article = document.createElement("article");
     article.className = "billboard-card";
-    article.innerHTML = `
-      <span class="ad-tag">${ad.kicker}</span>
-      <h3>${ad.message}</h3>
-      <p>${ad.subtext}</p>
-    `;
+
+    const tag = document.createElement("span");
+    tag.className = "ad-tag";
+    tag.textContent = ad.kicker;
+
+    const h3 = document.createElement("h3");
+    h3.textContent = ad.message;
+
+    const p = document.createElement("p");
+    p.textContent = ad.subtext;
+
+    article.appendChild(tag);
+    article.appendChild(h3);
+    article.appendChild(p);
     billboardRow.appendChild(article);
   }
 }
@@ -154,20 +163,57 @@ function renderGrid() {
   for (const ad of shuffledAds()) {
     const article = document.createElement("article");
     article.className = `demo-ad${ad.imageUrl ? " has-image" : ""}`;
-    article.innerHTML = `
-      <div class="demo-ad-header">
-        <span>Sponsored by your future self</span>
-        <span>Ad</span>
-      </div>
-      ${ad.imageUrl ? `<div class="demo-ad-image-wrap"><img class="demo-ad-image" src="${ad.imageUrl}" alt="Custom ad visual"></div>` : ""}
-      <span class="ad-tag">${ad.kicker}</span>
-      <h3 class="demo-ad-title">${ad.message}</h3>
-      <p class="demo-ad-copy">${ad.subtext}</p>
-      <div class="demo-ad-footer">
-        <button class="demo-ad-button demo-ad-button-primary" type="button">Fair point</button>
-        <button class="demo-ad-button demo-ad-button-secondary" type="button">Keep scrolling, I guess</button>
-      </div>
-    `;
+
+    const header = document.createElement("div");
+    header.className = "demo-ad-header";
+    const sponsorSpan = document.createElement("span");
+    sponsorSpan.textContent = "Sponsored by your future self";
+    const adLabel = document.createElement("span");
+    adLabel.textContent = "Ad";
+    header.appendChild(sponsorSpan);
+    header.appendChild(adLabel);
+    article.appendChild(header);
+
+    if (ad.imageUrl) {
+      const wrap = document.createElement("div");
+      wrap.className = "demo-ad-image-wrap";
+      const img = document.createElement("img");
+      img.className = "demo-ad-image";
+      img.src = ad.imageUrl;
+      img.alt = "Custom ad visual";
+      wrap.appendChild(img);
+      article.appendChild(wrap);
+    }
+
+    const tag = document.createElement("span");
+    tag.className = "ad-tag";
+    tag.textContent = ad.kicker;
+
+    const title = document.createElement("h3");
+    title.className = "demo-ad-title";
+    title.textContent = ad.message;
+
+    const copy = document.createElement("p");
+    copy.className = "demo-ad-copy";
+    copy.textContent = ad.subtext;
+
+    const footer = document.createElement("div");
+    footer.className = "demo-ad-footer";
+    const primaryBtn = document.createElement("button");
+    primaryBtn.className = "demo-ad-button demo-ad-button-primary";
+    primaryBtn.type = "button";
+    primaryBtn.textContent = "Fair point";
+    const secondaryBtn = document.createElement("button");
+    secondaryBtn.className = "demo-ad-button demo-ad-button-secondary";
+    secondaryBtn.type = "button";
+    secondaryBtn.textContent = "Keep scrolling, I guess";
+    footer.appendChild(primaryBtn);
+    footer.appendChild(secondaryBtn);
+
+    article.appendChild(tag);
+    article.appendChild(title);
+    article.appendChild(copy);
+    article.appendChild(footer);
     adGrid.appendChild(article);
   }
 }
@@ -365,6 +411,13 @@ customPhoto.addEventListener("change", () => {
   const [file] = customPhoto.files || [];
   if (!file) {
     state.customImage = "";
+    return;
+  }
+
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+  if (file.size > MAX_FILE_SIZE) {
+    customStatus.textContent = "Image too large (max 5 MB).";
+    customPhoto.value = "";
     return;
   }
 
