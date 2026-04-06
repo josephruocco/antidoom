@@ -32,3 +32,5 @@ The demo entry point is [demo/index.html](/Users/josephruocco/antidoom/demo/inde
 - Shows a hosted playground for the AntiDoom concept.
 - Includes many example ads, popup controls, spam mode, and a custom ad builder.
 - Includes the WordArt-inspired AntiDoom logo and the celebration reel.
+
+-test
