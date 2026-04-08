@@ -161,3 +161,10 @@ input[type="range"] {
   color: #aaa;
   text-decoration: line-through;
 }
+
+.build-link {
+  display: block;
+  color: #0a58d0;
+  text-decoration: none;
+  margin-top: 16px;
+}
