@@ -71,35 +71,9 @@ const adGrid = document.getElementById("adGrid");
 const spawnOneButton = document.getElementById("spawnOne");
 const shuffleGridButton = document.getElementById("shuffleGrid");
 const popupTemplate = document.getElementById("popupTemplate");
-const positionSelect = document.getElementById("positionSelect");
-const floatToggle = document.getElementById("floatToggle");
-const spamToggle = document.getElementById("spamToggle");
-const spamSpeed = document.getElementById("spamSpeed");
-const spamSpeedValue = document.getElementById("spamSpeedValue");
-const spamCount = document.getElementById("spamCount");
-const spamCountValue = document.getElementById("spamCountValue");
-const customKicker = document.getElementById("customKicker");
-const customMessage = document.getElementById("customMessage");
-const customSubtext = document.getElementById("customSubtext");
-const customPhoto = document.getElementById("customPhoto");
-const previewCustomButton = document.getElementById("previewCustom");
-const addCustomButton = document.getElementById("addCustom");
-const customStatus = document.getElementById("customStatus");
 const celebrationOverlay = document.getElementById("celebrationOverlay");
 const celebrationReel = document.getElementById("celebrationReel");
 const celebrationClose = document.getElementById("celebrationClose");
-
-const state = {
-  position: "random",
-  isFloating: false,
-  spamEnabled: false,
-  spamSpeed: Number(spamSpeed.value),
-  spamCount: Number(spamCount.value),
-  customAds: [],
-  customImage: ""
-};
-
-let spamIntervalId = null;
 
 const CELEBRATION_LINES = [
   "Congratulations. You briefly defeated the machine.",
@@ -125,11 +99,15 @@ const EDUCATIONAL_URLS = [
 ];
 
 function shuffledAds() {
-  return [...allAds()].sort(() => Math.random() - 0.5);
+  return [...DEMO_ADS].sort(() => Math.random() - 0.5);
 }
 
-function allAds() {
-  return [...DEMO_ADS, ...state.customAds];
+function randomAd() {
+  return DEMO_ADS[Math.floor(Math.random() * DEMO_ADS.length)];
+}
+
+function educationalUrl() {
+  return EDUCATIONAL_URLS[Math.floor(Math.random() * EDUCATIONAL_URLS.length)];
 }
 
 function renderBillboards() {
@@ -162,7 +140,7 @@ function renderGrid() {
 
   for (const ad of shuffledAds()) {
     const article = document.createElement("article");
-    article.className = `demo-ad${ad.imageUrl ? " has-image" : ""}`;
+    article.className = "demo-ad";
 
     const header = document.createElement("div");
     header.className = "demo-ad-header";
@@ -173,17 +151,6 @@ function renderGrid() {
     header.appendChild(sponsorSpan);
     header.appendChild(adLabel);
     article.appendChild(header);
-
-    if (ad.imageUrl) {
-      const wrap = document.createElement("div");
-      wrap.className = "demo-ad-image-wrap";
-      const img = document.createElement("img");
-      img.className = "demo-ad-image";
-      img.src = ad.imageUrl;
-      img.alt = "Custom ad visual";
-      wrap.appendChild(img);
-      article.appendChild(wrap);
-    }
 
     const tag = document.createElement("span");
     tag.className = "ad-tag";
@@ -218,38 +185,6 @@ function renderGrid() {
   }
 }
 
-function randomAd() {
-  const ads = allAds();
-  return ads[Math.floor(Math.random() * ads.length)];
-}
-
-function educationalUrl() {
-  return EDUCATIONAL_URLS[Math.floor(Math.random() * EDUCATIONAL_URLS.length)];
-}
-
-function applyPopupControls(root) {
-  const chosenPosition =
-    state.position === "random"
-      ? POSITION_OPTIONS[Math.floor(Math.random() * POSITION_OPTIONS.length)]
-      : state.position;
-
-  root.classList.remove(
-    "position-bottom-left",
-    "position-top-right",
-    "position-top-left",
-    "position-center",
-    "is-floating"
-  );
-
-  if (chosenPosition !== "bottom-right") {
-    root.classList.add(`position-${chosenPosition}`);
-  }
-
-  if (state.isFloating) {
-    root.classList.add("is-floating");
-  }
-}
-
 function repositionStacks() {
   const popups = [...document.querySelectorAll(".floating-root")];
   popups.forEach((popup, index) => {
@@ -265,16 +200,11 @@ function closePopup(root) {
   repositionStacks();
 }
 
-function openPopupCount() {
-  return document.querySelectorAll(".floating-root").length;
-}
-
-function spawnPopup(forcedAd, options = {}) {
+function spawnPopup(forcedAd) {
   const ad = forcedAd || randomAd();
   const fragment = popupTemplate.content.cloneNode(true);
   const root = fragment.querySelector(".floating-root");
   const imageWrap = fragment.querySelector(".floating-image-wrap");
-  const image = fragment.querySelector(".floating-image");
   const kicker = fragment.querySelector(".floating-kicker");
   const message = fragment.querySelector(".floating-message");
   const subtext = fragment.querySelector(".floating-subtext");
@@ -285,9 +215,9 @@ function spawnPopup(forcedAd, options = {}) {
   message.textContent = ad.message;
   subtext.textContent = ad.subtext;
 
-  if (ad.imageUrl) {
-    image.src = ad.imageUrl;
-    imageWrap.classList.remove("is-hidden");
+  const position = POSITION_OPTIONS[Math.floor(Math.random() * POSITION_OPTIONS.length)];
+  if (position !== "bottom-right") {
+    root.classList.add(`position-${position}`);
   }
 
   close.addEventListener("click", () => closePopup(root));
@@ -299,24 +229,19 @@ function spawnPopup(forcedAd, options = {}) {
     window.location.href = educationalUrl();
   });
 
-  applyPopupControls(root);
-  if (!options.allowMultiple) {
-    document.querySelectorAll(".floating-root").forEach((popup) => popup.remove());
-  }
+  document.querySelectorAll(".floating-root").forEach((p) => p.remove());
   document.body.appendChild(root);
   repositionStacks();
 }
 
 function showCelebration() {
   celebrationReel.innerHTML = "";
-
   for (const line of CELEBRATION_LINES) {
     const item = document.createElement("div");
     item.className = "celebration-line";
     item.textContent = line;
     celebrationReel.appendChild(item);
   }
-
   celebrationOverlay.classList.remove("is-hidden");
 }
 
@@ -324,139 +249,17 @@ function hideCelebration() {
   celebrationOverlay.classList.add("is-hidden");
 }
 
-function updateSpamLoop() {
-  if (spamIntervalId) {
-    window.clearInterval(spamIntervalId);
-    spamIntervalId = null;
-  }
-
-  if (!state.spamEnabled) {
-    return;
-  }
-
-  spamIntervalId = window.setInterval(() => {
-    if (openPopupCount() < state.spamCount) {
-      spawnPopup(null, { allowMultiple: true });
-    }
-  }, state.spamSpeed);
-}
-
-function readCustomAdFromForm() {
-  const kicker = customKicker.value.trim() || "Custom Placement";
-  const message = customMessage.value.trim();
-  const subtext = customSubtext.value.trim() || "You made this ad, which is already a strong sign.";
-
-  if (!message) {
-    customStatus.textContent = "Add a headline first.";
-    return null;
-  }
-
-  return {
-    kicker,
-    message,
-    subtext,
-    imageUrl: state.customImage
-  };
-}
-
-function refreshShowcase() {
+spawnOneButton.addEventListener("click", () => spawnPopup());
+shuffleGridButton.addEventListener("click", () => {
   renderBillboards();
   renderGrid();
-}
-
-spamSpeedValue.textContent = String(state.spamSpeed);
-spamCountValue.textContent = String(state.spamCount);
-positionSelect.value = state.position;
-
-spawnOneButton.addEventListener("click", () => {
-  spawnPopup();
-});
-shuffleGridButton.addEventListener("click", () => {
-  refreshShowcase();
-});
-
-positionSelect.addEventListener("change", () => {
-  state.position = positionSelect.value;
-  const popup = document.querySelector(".floating-root");
-  if (popup) {
-    applyPopupControls(popup);
-  }
-});
-
-floatToggle.addEventListener("change", () => {
-  state.isFloating = floatToggle.checked;
-  const popup = document.querySelector(".floating-root");
-  if (popup) {
-    applyPopupControls(popup);
-  }
-});
-
-spamToggle.addEventListener("change", () => {
-  state.spamEnabled = spamToggle.checked;
-  updateSpamLoop();
-});
-
-spamSpeed.addEventListener("input", () => {
-  state.spamSpeed = Number(spamSpeed.value);
-  spamSpeedValue.textContent = spamSpeed.value;
-  updateSpamLoop();
-});
-
-spamCount.addEventListener("input", () => {
-  state.spamCount = Number(spamCount.value);
-  spamCountValue.textContent = spamCount.value;
-});
-
-customPhoto.addEventListener("change", () => {
-  const [file] = customPhoto.files || [];
-  if (!file) {
-    state.customImage = "";
-    return;
-  }
-
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-  if (file.size > MAX_FILE_SIZE) {
-    customStatus.textContent = "Image too large (max 5 MB).";
-    customPhoto.value = "";
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.addEventListener("load", () => {
-    state.customImage = typeof reader.result === "string" ? reader.result : "";
-    customStatus.textContent = "Photo loaded.";
-  });
-  reader.readAsDataURL(file);
-});
-
-previewCustomButton.addEventListener("click", () => {
-  const ad = readCustomAdFromForm();
-  if (!ad) {
-    return;
-  }
-
-  customStatus.textContent = "Previewing custom popup.";
-  spawnPopup(ad);
-});
-
-addCustomButton.addEventListener("click", () => {
-  const ad = readCustomAdFromForm();
-  if (!ad) {
-    return;
-  }
-
-  state.customAds.unshift(ad);
-  customStatus.textContent = "Custom ad added to the mix.";
-  refreshShowcase();
-  spawnPopup(ad);
 });
 
 celebrationClose.addEventListener("click", hideCelebration);
 celebrationOverlay.addEventListener("click", (event) => {
-  if (event.target === celebrationOverlay) {
-    hideCelebration();
-  }
+  if (event.target === celebrationOverlay) hideCelebration();
 });
 
-refreshShowcase();
+renderBillboards();
+renderGrid();
 spawnPopup();
