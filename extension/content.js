@@ -1,7 +1,8 @@
 const DEFAULT_SETTINGS = {
   enabled: true,
   intervalMinutes: 2,
-  maxPopupsPerPage: 4
+  maxPopupsPerPage: 4,
+  disabledAds: []
 };
 
 const FIRST_POPUP_SCROLL_DISTANCE = 900;
@@ -139,12 +140,16 @@ function shouldShowPopup() {
 }
 
 function pickAd() {
+  const pool = ADS.filter(
+    (ad) => !(settings.disabledAds || []).includes(ad.message)
+  );
+  const source = pool.length > 0 ? pool : ADS;
   let index;
   do {
-    index = Math.floor(Math.random() * ADS.length);
-  } while (index === lastAdIndex && ADS.length > 1);
+    index = Math.floor(Math.random() * source.length);
+  } while (index === lastAdIndex && source.length > 1);
   lastAdIndex = index;
-  return ADS[index];
+  return source[index];
 }
 
 function destroyPopup() {

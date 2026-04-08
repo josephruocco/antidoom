@@ -1,8 +1,21 @@
 const DEFAULT_SETTINGS = {
   enabled: true,
   intervalMinutes: 2,
-  maxPopupsPerPage: 4
+  maxPopupsPerPage: 4,
+  disabledAds: []
 };
+
+const AD_MESSAGES = [
+  "This spiral is not sponsored.",
+  "You do not need another opinion. Start.",
+  "Your mood is being auctioned off. Close the app.",
+  "A walk would outperform this feed.",
+  "You are 3 tabs away from feeling worse.",
+  "You can log off before this gets bleak.",
+  "Your brain has better uses than refresh-refresh-refresh.",
+  "Leave now and call it discipline.",
+  "Call your Mom."
+];
 
 const DISTRACTING_HOST_PATTERNS = [
   "reddit.com",
@@ -22,6 +35,7 @@ const intervalValue = document.getElementById("intervalValue");
 const maxPopupsValue = document.getElementById("maxPopupsValue");
 const testPopupButton = document.getElementById("testPopup");
 const statusText = document.getElementById("status");
+const adList = document.getElementById("adList");
 
 function setStatus(message) {
   statusText.textContent = message;
@@ -33,12 +47,44 @@ function syncLabels() {
 }
 
 function saveSettings() {
+  const disabledAds = AD_MESSAGES.filter((_, i) => {
+    const cb = adList.querySelector(`input[data-index="${i}"]`);
+    return cb && !cb.checked;
+  });
   chrome.storage.sync.set({
     enabled: enabledInput.checked,
     intervalMinutes: Number(intervalInput.value),
-    maxPopupsPerPage: Number(maxPopupsInput.value)
+    maxPopupsPerPage: Number(maxPopupsInput.value),
+    disabledAds
   });
   syncLabels();
+}
+
+function renderAdList(disabledAds) {
+  adList.innerHTML = "";
+  AD_MESSAGES.forEach((msg, i) => {
+    const isDisabled = disabledAds.includes(msg);
+    const li = document.createElement("li");
+    if (isDisabled) li.classList.add("disabled");
+
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !isDisabled;
+    cb.dataset.index = String(i);
+    cb.id = `ad-${i}`;
+    cb.addEventListener("change", () => {
+      li.classList.toggle("disabled", !cb.checked);
+      saveSettings();
+    });
+
+    const label = document.createElement("label");
+    label.htmlFor = `ad-${i}`;
+    label.textContent = msg;
+
+    li.appendChild(cb);
+    li.appendChild(label);
+    adList.appendChild(li);
+  });
 }
 
 function isDistractingUrl(url) {
@@ -128,6 +174,7 @@ chrome.storage.sync.get(DEFAULT_SETTINGS, (stored) => {
   intervalInput.value = String(stored.intervalMinutes);
   maxPopupsInput.value = String(stored.maxPopupsPerPage);
   syncLabels();
+  renderAdList(stored.disabledAds || []);
 });
 
 enabledInput.addEventListener("change", saveSettings);
