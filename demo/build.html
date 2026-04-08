@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AntiDoom — Build Your Own Ad</title>
+    <link rel="stylesheet" href="demo.css">
+  </head>
+  <body>
+    <main class="demo-shell">
+      <section class="hero">
+        <p class="eyebrow">Custom Ad Studio</p>
+        <h1 class="logo" aria-label="AntiDoom">AntiDoom</h1>
+        <p class="lede">Write a message to your future self. Make it an ad.</p>
+      </section>
+
+      <section class="control-panel">
+        <div class="control-card">
+          <h2>Make Your Own Ad</h2>
+          <label class="control-field" for="customKicker">
+            <span>Kicker</span>
+            <input id="customKicker" type="text" maxlength="40" placeholder="Family Plan Upgrade">
+          </label>
+          <label class="control-field" for="customMessage">
+            <span>Headline</span>
+            <textarea id="customMessage" rows="2" maxlength="80" placeholder="Call your Mom."></textarea>
+          </label>
+          <label class="control-field" for="customSubtext">
+            <span>Subtext</span>
+            <textarea id="customSubtext" rows="3" maxlength="140" placeholder="It is a better use of your phone than whatever this is."></textarea>
+          </label>
+          <label class="control-field" for="customPhoto">
+            <span>Upload photo</span>
+            <input id="customPhoto" type="file" accept="image/*">
+          </label>
+          <div class="custom-actions">
+            <button id="previewCustom" class="hero-button hero-button-secondary" type="button">Preview popup</button>
+          </div>
+          <p id="customStatus" class="control-value"></p>
+        </div>
+      </section>
+
+      <p style="text-align:center; margin-top: 24px;">
+        <a href="/" style="font-family: 'Arial Narrow', Arial, sans-serif; font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#0a58d0;">← Back to demo</a>
+      </p>
+    </main>
+
+    <template id="popupTemplate">
+      <section class="floating-root">
+        <div class="floating-card" role="dialog" aria-live="polite" aria-label="Example AntiDoom popup">
+          <div class="floating-header">
+            <span>Sponsored by your future self</span>
+            <button class="floating-close" type="button" aria-label="Dismiss">&times;</button>
+          </div>
+          <div class="floating-body">
+            <div class="floating-image-wrap is-hidden">
+              <img class="floating-image" alt="Custom ad image">
+            </div>
+            <div class="floating-kicker"></div>
+            <p class="floating-message"></p>
+            <p class="floating-subtext"></p>
+          </div>
+          <div class="floating-footer">
+            <button class="floating-button floating-button-primary" type="button">Close this tab</button>
+            <button class="floating-button floating-button-secondary" type="button">Go learn something</button>
+          </div>
+        </div>
+      </section>
+    </template>
+
+    <script src="build.js"></script>
+  </body>
+</html>
