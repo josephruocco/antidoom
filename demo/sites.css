@@ -35,8 +35,14 @@ body {
 .ctrl-btn:hover { background: #2f2f40; }
 .ctrl-btn.is-on { background: #4b8bff; border-color: #4b8bff; }
 .ctrl-primary { background: #22b45e; border-color: #22b45e; }
-.ctrl-store { background: #1a73e8; border-color: #1a73e8; text-decoration: none; font-weight: 600; }
-.ctrl-store:hover { background: #1b66c9; }
+/* Green download button, pushed to the top-right of the bar */
+.ctrl-store { margin-left: auto; background: #22c55e; border-color: #16a34a; color: #08210f; text-decoration: none; font-weight: 700; }
+.ctrl-store:hover { background: #1eb455; }
+.ctrl-menu { text-decoration: none; }
+
+/* Demo affordance: ad popups can be dragged around */
+.antidoom-root { cursor: grab; }
+.antidoom-root:active { cursor: grabbing; }
 .ctrl-select { display: inline-flex; align-items: center; gap: 6px; opacity: 0.9; }
 .ctrl-select select {
   font-family: inherit; font-size: 13px; padding: 5px 6px;

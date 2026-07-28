@@ -11,7 +11,7 @@ const DEMO_ADS = [
   },
   {
     kicker: "Limited-Time Offer",
-    message: "Your mood is being auctioned off. Close the app.",
+    message: "Your mood is being auctioned off. Close the tab.",
     subtext: "Someone is making money from your nervous system. You can leave."
   },
   {
@@ -139,7 +139,7 @@ function renderBillboards() {
 // (Some styles override the copy with their own baked-in text via CSS.)
 const STYLE_SAMPLES = [
   { style: "win98", sponsor: "Paid for by Friends of Sleep", kicker: "Sponsored Calm", message: "You can log off before this gets bleak.", subtext: "No grand reinvention required. Just close one thing." },
-  { style: "neon", sponsor: "Sponsored by Going Outside", kicker: "Limited-Time Offer", message: "Your mood is being auctioned off. Close the app.", subtext: "Someone is making money from your nervous system." },
+  { style: "neon", sponsor: "Sponsored by Going Outside", kicker: "Limited-Time Offer", message: "Your mood is being auctioned off. Close the tab.", subtext: "Someone is making money from your nervous system." },
   { style: "dos", sponsor: "Sponsored by your future self", kicker: "Promoted by Future You", message: "A walk would outperform this feed.", subtext: "Fresh air remains embarrassingly overpowered." },
   { style: "toolbar", sponsor: "A message from the Department of Enough", kicker: "Behavioral Ad", message: "You are 3 tabs away from feeling worse.", subtext: "Stopping counts as a skill." },
   { style: "bubble", sponsor: "Brought to you by Tomorrow Morning You", kicker: "Family Plan Upgrade", message: "Call your Mom.", subtext: "It is a better use of your phone than this." },

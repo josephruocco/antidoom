@@ -41,7 +41,7 @@ const SITE_ADS = {
 const GENERAL_ADS = [
   { kicker: "Behavioral Ad", message: "You are 3 tabs away from feeling worse.", subtext: "This is your reminder that stopping counts as a skill." },
   { kicker: "Promoted by Future You", message: "A walk would outperform this feed.", subtext: "Fresh air remains embarrassingly overpowered." },
-  { kicker: "Limited-Time Offer", message: "Your mood is being auctioned off. Close the app.", subtext: "Someone is making money from your nervous system. You can leave." },
+  { kicker: "Limited-Time Offer", message: "Your mood is being auctioned off. Close the tab.", subtext: "Someone is making money from your nervous system. You can leave." },
   { kicker: "Family Plan Upgrade", message: "Call your Mom.", subtext: "It is a better use of your phone than whatever this is." },
   { kicker: "Mood Market Alert", message: "This spiral is not sponsored.", subtext: "A walk, a glass of water, or one decisive email would outperform this feed." },
   { kicker: "Attention Buyback", message: "Your brain has better uses than refresh-refresh-refresh.", subtext: "Try one small real-world action before the next scroll." },
@@ -202,8 +202,34 @@ function spawnCard(style, ad, pos) {
   const kill = () => root.remove();
   root.querySelector(".antidoom-close").addEventListener("click", kill);
   root.querySelectorAll(".antidoom-button").forEach((b) => b.addEventListener("click", kill));
+  makeDraggable(root);
   document.body.appendChild(root);
   return root;
+}
+
+// Demo: drag a popup anywhere (grab the card, but not its buttons).
+function makeDraggable(root) {
+  root.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0 || e.target.closest("button, a")) return;
+    e.preventDefault();
+    const r = root.getBoundingClientRect();
+    const startL = r.left;
+    const startT = r.top;
+    const startX = e.clientX;
+    const startY = e.clientY;
+    root.style.left = `${startL}px`;
+    root.style.top = `${startT}px`;
+    const move = (ev) => {
+      root.style.left = `${startL + ev.clientX - startX}px`;
+      root.style.top = `${startT + ev.clientY - startY}px`;
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  });
 }
 
 function pickStyle() {

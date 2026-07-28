@@ -64,7 +64,7 @@ const ADS = [
   {
     tier: 3,
     kicker: "Limited-Time Offer",
-    message: "Your mood is being auctioned off. Close the app.",
+    message: "Your mood is being auctioned off. Close the tab.",
     subtext: "Someone is making money from your nervous system. You can leave."
   },
   {
