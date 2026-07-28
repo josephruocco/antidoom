@@ -151,24 +151,28 @@ function renderSite(site) {
 }
 
 // ---------------- the real ad card ----------------
-// A 3x2 grid of well-separated cells (accounts for the control bar + card size),
-// shuffled so a burst never stacks two cards in the same spot.
+// Lay cards out on a grid sized to the ACTUAL viewport so they never overlap.
+// Cell = card size + gap; we only use as many columns/rows as truly fit, and
+// return at most that many positions (so the burst count is capped to fit).
 function spreadPositions(count) {
-  const cardW = 420, cardH = 380, m = 14, topBar = 58;
-  const cols = [
-    m,
-    Math.round((window.innerWidth - cardW) / 2),
-    Math.max(m, window.innerWidth - cardW - m)
-  ];
-  const rows = [topBar, Math.max(topBar, window.innerHeight - cardH - m)];
+  const cellW = 476, cellH = 452, topBar = 56, mX = 12, mY = 12;
+  const availW = window.innerWidth - mX * 2;
+  const availH = window.innerHeight - topBar - mY;
+  const cols = Math.max(1, Math.floor(availW / cellW));
+  const rows = Math.max(1, Math.floor(availH / cellH));
   const cells = [];
-  for (const top of rows) for (const left of cols) cells.push({ left, top });
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) cells.push({ c, r });
+  }
+  // Center the whole block of used cells in the available area.
+  const offX = mX + Math.max(0, (availW - cols * cellW) / 2);
+  const offY = topBar + Math.max(0, (availH - rows * cellH) / 2);
   return shuffle(cells)
     .slice(0, count)
-    .map((c) => ({
-      left: Math.round(c.left + (Math.random() * 24 - 12)),
-      top: Math.round(c.top + (Math.random() * 24 - 12)),
-      rotate: (Math.random() * 6 - 3).toFixed(2)
+    .map(({ c, r }) => ({
+      left: Math.round(offX + c * cellW),
+      top: Math.round(offY + r * cellH),
+      rotate: (Math.random() * 3 - 1.5).toFixed(2)
     }));
 }
 
