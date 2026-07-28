@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AntiDoom Demo</title>
+    <link rel="stylesheet" href="ad-styles.css?v=6">
     <link rel="stylesheet" href="demo.css">
   </head>
   <body>
@@ -13,7 +14,9 @@
         <h1 class="logo" aria-label="AntiDoom">AntiDoom</h1>
         <p class="lede">A showroom full of obnoxious fake ads that are weirdly on your side.</p>
         <div class="hero-actions">
-          <button id="spawnOne" class="hero-button hero-button-primary" type="button">Launch random popup</button>
+          <a class="hero-button hero-button-primary" href="https://chromewebstore.google.com/detail/antidoom/kpibmejclghfaeiaofoijdnagaapomjh" target="_blank" rel="noopener">Download for Chrome</a>
+          <a class="hero-button hero-button-secondary" href="sites.html">Try It</a>
+          <button id="spawnOne" class="hero-button hero-button-secondary" type="button">Launch random popup</button>
           <button id="shuffleGrid" class="hero-button hero-button-secondary" type="button">Shuffle examples</button>
         </div>
       </section>
@@ -26,7 +29,7 @@
         <p>Different shapes, same agenda: interrupt the spiral with something sharper than generic positivity.</p>
       </section>
 
-      <section class="ad-grid" id="adGrid"></section>
+      <section class="ad-grid style-gallery" id="adGrid"></section>
     </main>
 
     <template id="popupTemplate">

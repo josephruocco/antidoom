@@ -58,6 +58,19 @@ h1 {
   line-height: 1.4;
 }
 
+.streak {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.streak:empty {
+  display: none;
+}
+
 .row {
   display: flex;
   align-items: center;

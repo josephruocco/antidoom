@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AntiDoom — Live on your feeds</title>
+    <!-- The REAL extension styles, so the demo matches production exactly -->
+    <link rel="stylesheet" href="ad-styles.css?v=6">
+    <link rel="stylesheet" href="sites.css?v=6">
+  </head>
+  <body>
+    <!-- Control bar (hide it for clean screenshots) -->
+    <div class="ctrl" id="ctrl">
+      <span class="ctrl-brand">AntiDoom demo</span>
+      <div class="ctrl-group" role="group" aria-label="Website">
+        <button class="ctrl-btn is-on" data-site="facebook">Fakebook</button>
+        <button class="ctrl-btn" data-site="reddit">Deaddit</button>
+        <button class="ctrl-btn" data-site="instagram">Instagrim</button>
+        <button class="ctrl-btn" data-site="hn">Slacker News</button>
+      </div>
+      <label class="ctrl-select">
+        Style
+        <select id="styleSelect"></select>
+      </label>
+      <button class="ctrl-btn ctrl-primary" id="dropAd">Drop ad</button>
+      <button class="ctrl-btn" id="swarm">Swarm</button>
+      <button class="ctrl-btn" id="overlayGhost">Ghost text</button>
+      <button class="ctrl-btn" id="overlayFlip">Flip card</button>
+      <button class="ctrl-btn" id="overlayWavy">WordArt</button>
+      <button class="ctrl-btn" id="clearAll">Clear</button>
+      <a class="ctrl-btn ctrl-store" href="https://chromewebstore.google.com/detail/antidoom/kpibmejclghfaeiaofoijdnagaapomjh" target="_blank" rel="noopener">＋ Add to Chrome</a>
+      <label class="ctrl-hide"><input type="checkbox" id="hideCtrl"> Hide bar</label>
+    </div>
+
+    <!-- Mock website feed goes here -->
+    <div class="site" id="site"></div>
+
+    <script src="sites.js?v=6"></script>
+  </body>
+</html>

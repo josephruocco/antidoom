@@ -300,6 +300,16 @@ body {
   gap: 18px;
 }
 
+/* Gallery of the real extension ad styles (mixed sizes, so flex-wrap + center). */
+.style-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 56px 36px;
+  padding: 12px 0 24px;
+}
+
 .demo-ad {
   position: relative;
   padding: 18px;

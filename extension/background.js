@@ -24,6 +24,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return false;
   }
 
+  if (message?.type === "antidoom:set-badge") {
+    const streak = Number(message.streak) || 0;
+    chrome.action.setBadgeText({ text: streak > 0 ? String(streak) : "" });
+    chrome.action.setBadgeBackgroundColor({ color: "#e11d48" });
+    sendResponse({ ok: true });
+    return false;
+  }
+
   if (message?.type === "antidoom:open-educational-site") {
     const url = pickEducationalUrl();
 

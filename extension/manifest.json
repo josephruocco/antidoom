@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AntiDoom",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Replaces doomscroll momentum with sharp, positive popup ads.",
   "permissions": [
     "storage",
@@ -49,6 +49,7 @@
         "*://news.ycombinator.com/*"
       ],
       "js": [
+        "ads.js",
         "content.js"
       ],
       "css": [

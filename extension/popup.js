@@ -5,17 +5,8 @@ const DEFAULT_SETTINGS = {
   disabledAds: []
 };
 
-const AD_MESSAGES = [
-  "This spiral is not sponsored.",
-  "You do not need another opinion. Start.",
-  "Your mood is being auctioned off. Close the app.",
-  "A walk would outperform this feed.",
-  "You are 3 tabs away from feeling worse.",
-  "You can log off before this gets bleak.",
-  "Your brain has better uses than refresh-refresh-refresh.",
-  "Leave now and call it discipline.",
-  "Call your Mom."
-];
+// ADS comes from ads.js, the same list the content script shows.
+const AD_MESSAGES = ADS.map((ad) => ad.message);
 
 const DISTRACTING_HOST_PATTERNS = [
   "reddit.com",
@@ -128,7 +119,7 @@ function injectContentAssets(tabId) {
         chrome.scripting.executeScript(
           {
             target: { tabId },
-            files: ["content.js"]
+            files: ["ads.js", "content.js"]
           },
           () => {
             if (chrome.runtime.lastError) {
@@ -175,6 +166,15 @@ chrome.storage.sync.get(DEFAULT_SETTINGS, (stored) => {
   maxPopupsInput.value = String(stored.maxPopupsPerPage);
   syncLabels();
   renderAdList(stored.disabledAds || []);
+});
+
+chrome.storage.local.get({ stats: { streak: 0, feedSeconds: 0 } }, ({ stats }) => {
+  const el = document.getElementById("streak");
+  if (!el) return;
+  const mins = Math.round((stats.feedSeconds || 0) / 60);
+  el.textContent = stats.streak > 0
+    ? `🔥 ${stats.streak}-day streak · ~${mins} min scrolled today`
+    : `~${mins} min of feed today. Leave within 30s of a popup to start a streak.`;
 });
 
 enabledInput.addEventListener("change", saveSettings);

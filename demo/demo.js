@@ -135,53 +135,44 @@ function renderBillboards() {
   }
 }
 
+// One card per real extension style, so the grid showcases the actual variety.
+// (Some styles override the copy with their own baked-in text via CSS.)
+const STYLE_SAMPLES = [
+  { style: "win98", sponsor: "Paid for by Friends of Sleep", kicker: "Sponsored Calm", message: "You can log off before this gets bleak.", subtext: "No grand reinvention required. Just close one thing." },
+  { style: "neon", sponsor: "Sponsored by Going Outside", kicker: "Limited-Time Offer", message: "Your mood is being auctioned off. Close the app.", subtext: "Someone is making money from your nervous system." },
+  { style: "dos", sponsor: "Sponsored by your future self", kicker: "Promoted by Future You", message: "A walk would outperform this feed.", subtext: "Fresh air remains embarrassingly overpowered." },
+  { style: "toolbar", sponsor: "A message from the Department of Enough", kicker: "Behavioral Ad", message: "You are 3 tabs away from feeling worse.", subtext: "Stopping counts as a skill." },
+  { style: "bubble", sponsor: "Brought to you by Tomorrow Morning You", kicker: "Family Plan Upgrade", message: "Call your Mom.", subtext: "It is a better use of your phone than this." },
+  { style: "star", sponsor: "Sponsored by your future self", kicker: "Promoted by Future You", message: "A walk would outperform this feed.", subtext: "Fresh air remains overpowered." },
+  { style: "sunburst", sponsor: "Sponsored by your future self", kicker: "Paid Placement", message: "This is a highlight reel. Yours is not worse.", subtext: "You're comparing your Tuesday to someone's best day." },
+  { style: "closedsign", sponsor: "Sponsored by your future self", kicker: "Notice", message: "The feed is closed. Go be a person.", subtext: "" },
+  { style: "warning3d", sponsor: "Sponsored by your future self", kicker: "Alert", message: "Something is mining your focus right now.", subtext: "" },
+  { style: "surgeon", sponsor: "Sponsored by your future self", kicker: "Notice", message: "", subtext: "" },
+  { style: "clock", sponsor: "Sponsored by your future self", kicker: "Reminder", message: "", subtext: "" }
+];
+
 function renderGrid() {
   adGrid.innerHTML = "";
 
-  for (const ad of shuffledAds()) {
-    const article = document.createElement("article");
-    article.className = "demo-ad";
-
-    const header = document.createElement("div");
-    header.className = "demo-ad-header";
-    const sponsorSpan = document.createElement("span");
-    sponsorSpan.textContent = "Sponsored by your future self";
-    const adLabel = document.createElement("span");
-    adLabel.textContent = "Ad";
-    header.appendChild(sponsorSpan);
-    header.appendChild(adLabel);
-    article.appendChild(header);
-
-    const tag = document.createElement("span");
-    tag.className = "ad-tag";
-    tag.textContent = ad.kicker;
-
-    const title = document.createElement("h3");
-    title.className = "demo-ad-title";
-    title.textContent = ad.message;
-
-    const copy = document.createElement("p");
-    copy.className = "demo-ad-copy";
-    copy.textContent = ad.subtext;
-
-    const footer = document.createElement("div");
-    footer.className = "demo-ad-footer";
-    const primaryBtn = document.createElement("button");
-    primaryBtn.className = "demo-ad-button demo-ad-button-primary";
-    primaryBtn.type = "button";
-    primaryBtn.textContent = "Fair point";
-    const secondaryBtn = document.createElement("button");
-    secondaryBtn.className = "demo-ad-button demo-ad-button-secondary";
-    secondaryBtn.type = "button";
-    secondaryBtn.textContent = "Keep scrolling, I guess";
-    footer.appendChild(primaryBtn);
-    footer.appendChild(secondaryBtn);
-
-    article.appendChild(tag);
-    article.appendChild(title);
-    article.appendChild(copy);
-    article.appendChild(footer);
-    adGrid.appendChild(article);
+  for (const s of STYLE_SAMPLES) {
+    const card = document.createElement("div");
+    card.className = "antidoom-card";
+    card.setAttribute("data-style", s.style);
+    card.setAttribute("role", "img");
+    card.setAttribute("aria-label", `${s.style} ad style`);
+    card.innerHTML = `
+      <div class="antidoom-header"><span>${s.sponsor}</span><button class="antidoom-close" type="button" aria-hidden="true">&times;</button></div>
+      <div class="antidoom-body">
+        <div class="antidoom-kicker">${s.kicker}</div>
+        <p class="antidoom-message">${s.message || "A walk would outperform this feed."}</p>
+        <p class="antidoom-subtext">${s.subtext}</p>
+      </div>
+      <div class="antidoom-footer">
+        <button class="antidoom-button antidoom-button-primary" type="button">Close this tab</button>
+        <button class="antidoom-button antidoom-button-secondary" type="button">Go learn something</button>
+        <button class="antidoom-button antidoom-button-snooze" type="button">Snooze 10 min</button>
+      </div>`;
+    adGrid.appendChild(card);
   }
 }
 
