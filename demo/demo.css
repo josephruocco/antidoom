@@ -33,14 +33,19 @@ body {
 
 .hero {
   position: relative;
-  overflow: hidden;
-  padding: 28px;
-  border: 4px solid var(--ink);
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.88), transparent 28%),
-    linear-gradient(130deg, rgba(255, 252, 220, 0.96), rgba(255, 227, 108, 0.95) 45%, rgba(255, 147, 66, 0.96) 80%, rgba(255, 86, 86, 0.94));
-  box-shadow: 16px 16px 0 rgba(23, 23, 23, 0.18);
+  padding: 20px 4px 28px;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border-bottom: 3px solid var(--ink);
+  text-align: center;
+}
+
+/* Keep gallery cards at their natural size — shrinking crushes the shapes'
+   text to one word per line. */
+.style-gallery > * {
+  flex: 0 0 auto;
 }
 
 .hero::after {
@@ -106,6 +111,7 @@ body {
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
   margin-top: 24px;
 }

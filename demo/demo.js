@@ -242,7 +242,6 @@ function hideCelebration() {
 
 spawnOneButton.addEventListener("click", () => spawnPopup());
 shuffleGridButton.addEventListener("click", () => {
-  renderBillboards();
   renderGrid();
 });
 
@@ -251,6 +250,4 @@ celebrationOverlay.addEventListener("click", (event) => {
   if (event.target === celebrationOverlay) hideCelebration();
 });
 
-renderBillboards();
 renderGrid();
-spawnPopup();
