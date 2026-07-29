@@ -64,6 +64,9 @@ body {
 .row { display: flex; align-items: center; gap: 10px; }
 .ph-img { width: 100%; border-radius: 8px; margin-top: 10px; }
 .post-img { display: block; width: 100%; max-height: 340px; object-fit: cover; border-radius: 8px; margin-top: 10px; }
+.fb-comment { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; }
+.fb-comment .avatar { width: 32px; height: 32px; flex: 0 0 32px; }
+.fb-comment-bubble { background: #f0f2f5; border-radius: 16px; padding: 8px 12px; font-size: 14px; line-height: 1.35; }
 
 /* PostHog inside-joke banner, pinned atop the Fakebook feed */
 .pineapple-banner {

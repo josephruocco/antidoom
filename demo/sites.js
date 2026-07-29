@@ -6,6 +6,9 @@ const STYLES = [
   "closedsign", "bubble", "warning3d", "surgeon", "clock"
 ];
 
+// How many ads a Swarm drops (capped by what fits the viewport).
+const SWARM_COUNT = 4;
+
 const SPONSOR_LINES = [
   "Sponsored by your future self",
   "Brought to you by Touching Grass™",
@@ -62,13 +65,15 @@ const shuffle = (arr) => {
 const sponsor = () => rand(SPONSOR_LINES);
 
 // ---------------- mock feeds ----------------
-function fbPost(name, avatar, time, text, img) {
+function fbPost(name, avatar, time, text, img, comment) {
   return `<article class="post">
     <div class="row"><div class="avatar ${avatar}"></div>
       <div><div class="strong">${name}</div><div class="muted">${time} · 🌍</div></div></div>
     <p style="margin:10px 0 0">${text}</p>
     ${img ? `<img class="post-img" src="img/${img}.png" alt="">` : ""}
     <div class="fb-bar"><span>👍 Like</span><span>💬 Comment</span><span>↪ Share</span></div>
+    ${comment ? `<div class="fb-comment"><div class="avatar ${comment.avatar || "a3"}"></div>
+      <div class="fb-comment-bubble"><span class="strong">${comment.name}</span> ${comment.text}</div></div>` : ""}
   </article>`;
 }
 function facebookFeed() {
@@ -78,10 +83,10 @@ function facebookFeed() {
       <div class="fb-actions"><div class="fb-pill"></div><div class="fb-pill"></div><div class="fb-pill"></div></div>
     </div>
     <div class="feed">
-      ${pineappleBanner()}
-      ${fbPost("Mindfulness Coach 🧘", "a5", "2h", "Remember to be PRESENT today! (posted from the couch, 4th hour)", "hike_view")}
-      ${fbPost("Definitely Working Rn", "a2", "3h", "10 things you won't BELIEVE are still legal to sell...", null)}
-      ${fbPost("Digital Detox, Day 1", "a4", "5h", "Hot take that will definitely start an argument in the comments 🔥", "family_backyard")}
+      ${fbPost("Dan from Marketing", "a1", "1h", "Settling this once and for all: this is the perfect pizza. Fight me in the comments. 🍍🍕", "pineapple_pizza", { name: "joe_dev", avatar: "a6", text: "pineapple has ABSOLUTELY NO BUSINESS to be on pizza" })}
+      ${fbPost("Digital Detox, Day 1", "a4", "3h", "Hot take that will definitely start an argument in the comments 🔥", null)}
+      ${fbPost("Mindfulness Coach 🧘", "a5", "4h", "Remember to be PRESENT today! (posted from the couch, 4th hour)", "hike_view")}
+      ${fbPost("Proud Parent", "a2", "5h", "Can you believe how big they've gotten?! 🥹", "family_backyard")}
       ${fbPost("Touch Grass Enthusiast", "a3", "6h", "Tag someone who needs to see this!", "dog_rainy_window")}
     </div>`;
 }
@@ -335,7 +340,7 @@ document.getElementById("swarm").addEventListener("click", () => {
   const adPool = shuffle([SITE_ADS[currentSite], ...GENERAL_ADS]);
   // Grid has 6 cells; cap the burst by cells, ads, and (in random mode) styles.
   const cap = Math.min(6, adPool.length, sel === "random" ? STYLES.length : 6);
-  const count = Math.min(cap, 3 + Math.floor(Math.random() * 3)); // 3–5
+  const count = Math.min(cap, SWARM_COUNT); // fixed target (capped by what fits)
   // Unique styles in random mode; the chosen style repeated otherwise.
   const styles = sel === "random" ? shuffle(STYLES).slice(0, count) : Array(count).fill(sel);
   const positions = spreadPositions(count);

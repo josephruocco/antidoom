@@ -151,6 +151,41 @@ const STYLE_SAMPLES = [
   { style: "clock", sponsor: "Sponsored by your future self", kicker: "Reminder", message: "", subtext: "" }
 ];
 
+// --- overlay ads shown statically in the gallery ---
+function ensureTurbulenceDefs() {
+  if (document.getElementById("antidoom-turb-defs")) return;
+  const holder = document.createElement("div");
+  holder.id = "antidoom-turb-defs";
+  holder.style.cssText = "position:absolute;width:0;height:0;overflow:hidden";
+  holder.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"><defs>
+    <filter id="antidoom-turb-text" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise" seed="0">
+        <animate attributeName="seed" from="0" to="8" dur="1.4s" repeatCount="indefinite"/></feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="13" xChannelSelector="R" yChannelSelector="G"/></filter>
+    <filter id="antidoom-turb-bg" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" result="noise" seed="0"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="55" xChannelSelector="R" yChannelSelector="G"/></filter>
+  </defs></svg>`;
+  document.documentElement.appendChild(holder);
+}
+
+function galleryWavy() {
+  ensureTurbulenceDefs();
+  const word = "FREE YOURSELF";
+  const pal = ["#ed0a3f", "#ff8833", "#af593e", "#01a638", "#0066ff", "#8359a3", "#f7468a"];
+  let ci = 0;
+  const fill = [...word].map((ch) => ch === " " ? '<span class="antidoom-wavy-space"> </span>' : `<span style="color:${pal[ci++ % pal.length]}">${ch}</span>`).join("");
+  const outline = [...word].map((ch) => ch === " " ? '<span class="antidoom-wavy-space"> </span>' : `<span>${ch}</span>`).join("");
+  return `<div class="antidoom-wavy"><div class="antidoom-wavy-card"><div class="antidoom-wavy-inner"><div class="antidoom-wavy-fill">${fill}</div><div class="antidoom-wavy-outline">${outline}</div></div></div></div>`;
+}
+function galleryFlip() {
+  const p = "LOG OFF";
+  return `<div class="antidoom-flip"><div class="antidoom-flip-inner"><div class="antidoom-flip-front"><span class="antidoom-flip-text">${p}</span></div><div class="antidoom-flip-back"><span class="antidoom-flip-text">${p}</span></div></div></div>`;
+}
+function galleryGhost() {
+  return `<div class="antidoom-ghost">YOUR ATTENTION IS FADING</div>`;
+}
+
 function renderGrid() {
   adGrid.innerHTML = "";
 
