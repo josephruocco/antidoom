@@ -329,3 +329,105 @@ renderGrid();
   track.parentElement.addEventListener("mouseenter", () => window.clearInterval(timer));
   track.parentElement.addEventListener("mouseleave", () => { timer = window.setInterval(() => go(idx + 1), 5000); });
 })();
+
+// Flip the AntiDoom title + tagline every couple seconds, revealing the next
+// font (Comic Sans -> Georgia -> Impact) at the edge-on midpoint.
+(function () {
+  const logo = document.querySelector(".logo");
+  const lede = document.querySelector(".lede");
+  if (!logo && !lede) return;
+  const fonts = [
+    '"Comic Sans MS", "Comic Sans", cursive',
+    'Georgia, "Times New Roman", serif',
+    'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif'
+  ];
+  let i = 0;
+  function flip() {
+    i = (i + 1) % fonts.length;
+    [[logo, "logo-flip"], [lede, "lede-flip"]].forEach(([el, cls]) => {
+      if (!el) return;
+      el.classList.remove(cls);
+      void el.offsetWidth; // restart the animation
+      el.classList.add(cls);
+    });
+    window.setTimeout(() => {
+      if (logo) logo.style.fontFamily = fonts[i];
+      if (lede) lede.style.fontFamily = fonts[i];
+    }, 360); // ~midpoint of the 0.72s flip (edge-on)
+  }
+  window.setInterval(flip, 2600);
+})();
+
+// Intro: bombard the page with ads on load, land on a message, one button clears.
+(function () {
+  function introCardHTML(s) {
+    return `<div class="antidoom-card" data-style="${s.style}" role="img" aria-label="${s.style} ad">
+      <div class="antidoom-header"><span>${s.sponsor}</span><button class="antidoom-close" type="button" aria-hidden="true">&times;</button></div>
+      <div class="antidoom-body">
+        <div class="antidoom-kicker">${s.kicker}</div>
+        <p class="antidoom-message">${s.message || "A walk would outperform this feed."}</p>
+        <p class="antidoom-subtext">${s.subtext}</p>
+      </div>
+      <div class="antidoom-footer">
+        <button class="antidoom-button antidoom-button-primary" type="button">Close this tab</button>
+        <button class="antidoom-button antidoom-button-secondary" type="button">Go learn something</button>
+        <button class="antidoom-button antidoom-button-snooze" type="button">Snooze 10 min</button>
+      </div></div>`;
+  }
+
+  const pool = [
+    ...STYLE_SAMPLES.map(introCardHTML),
+    galleryGhost(), galleryFlip(), galleryWavy()
+  ].sort(() => Math.random() - 0.5);
+
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const cols = Math.max(3, Math.round(vw / 300));
+  const rows = Math.max(3, Math.round(vh / 240));
+  const cellW = vw / cols, cellH = vh / rows;
+  const slots = [];
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) slots.push([c, r]);
+  }
+  slots.sort(() => Math.random() - 0.5);
+  const count = Math.min(slots.length, 20, pool.length);
+
+  const overlay = document.createElement("div");
+  overlay.id = "introSpam";
+  document.body.appendChild(overlay);
+  document.body.classList.add("intro-lock");
+
+  for (let i = 0; i < count; i += 1) {
+    const [c, r] = slots[i];
+    const ad = document.createElement("div");
+    ad.className = "intro-ad";
+    ad.style.setProperty("--r", `${(Math.random() * 12 - 6).toFixed(1)}deg`);
+    const left = Math.max(6, Math.min(vw - 306, c * cellW + (cellW - 300) * Math.random()));
+    const top = Math.max(6, Math.min(vh - 120, r * cellH + (cellH - 160) * Math.random()));
+    ad.style.left = `${left}px`;
+    ad.style.top = `${top}px`;
+    ad.style.animationDelay = `${i * 90}ms`;
+    ad.innerHTML = pool[i % pool.length];
+    overlay.appendChild(ad);
+  }
+
+  const final = document.createElement("div");
+  final.className = "intro-final";
+  final.innerHTML = `
+    <h2>You get bombarded with ads every day</h2>
+    <p>AntiDoom floods you with ones that are rooting <em>for</em> you &mdash; not against you.</p>
+    <button class="intro-clear-btn" type="button">Clear the ads &rarr;</button>`;
+  overlay.appendChild(final);
+
+  function reveal() {
+    overlay.classList.add("is-clearing");
+    document.body.classList.remove("intro-lock");
+    window.setTimeout(() => overlay.remove(), 550);
+    document.removeEventListener("keydown", onKey);
+  }
+  function onKey(e) { if (e.key === "Escape") reveal(); }
+  final.querySelector(".intro-clear-btn").addEventListener("click", reveal);
+  document.addEventListener("keydown", onKey);
+
+  // Show the message once the last ad has popped in.
+  window.setTimeout(() => final.classList.add("is-shown"), count * 90 + 400);
+})();
