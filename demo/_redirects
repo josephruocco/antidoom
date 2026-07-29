@@ -1,0 +1,2 @@
+# Make antidoom.josephruocco.net the canonical URL: send the -demo host there.
+https://antidoom-demo.josephruocco.net/*  https://antidoom.josephruocco.net/:splat  301!
