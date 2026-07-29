@@ -302,3 +302,30 @@ celebrationOverlay.addEventListener("click", (event) => {
 });
 
 renderGrid();
+
+// --- mockup carousel ---
+(function () {
+  const track = document.getElementById("carouselTrack");
+  const dotsEl = document.getElementById("carouselDots");
+  if (!track || !dotsEl) return;
+  const count = track.children.length;
+  let idx = 0;
+  for (let i = 0; i < count; i += 1) {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.setAttribute("aria-label", `Slide ${i + 1}`);
+    dot.addEventListener("click", () => go(i));
+    dotsEl.appendChild(dot);
+  }
+  function go(n) {
+    idx = (n + count) % count;
+    track.style.transform = `translateX(-${idx * 100}%)`;
+    [...dotsEl.children].forEach((d, i) => d.classList.toggle("is-active", i === idx));
+  }
+  document.getElementById("carouselNext").addEventListener("click", () => go(idx + 1));
+  document.getElementById("carouselPrev").addEventListener("click", () => go(idx - 1));
+  go(0);
+  let timer = window.setInterval(() => go(idx + 1), 5000);
+  track.parentElement.addEventListener("mouseenter", () => window.clearInterval(timer));
+  track.parentElement.addEventListener("mouseleave", () => { timer = window.setInterval(() => go(idx + 1), 5000); });
+})();

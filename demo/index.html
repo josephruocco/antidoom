@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AntiDoom Demo</title>
-    <link rel="stylesheet" href="ad-styles.css?v=22">
-    <link rel="stylesheet" href="demo.css?v=22">
+    <link rel="stylesheet" href="ad-styles.css?v=24">
+    <link rel="stylesheet" href="demo.css?v=24">
   </head>
   <body>
     <main class="demo-shell">
@@ -14,18 +14,38 @@
         <p class="lede">A showroom full of obnoxious fake ads that are weirdly on your side.</p>
         <div class="hero-actions">
           <a class="hero-button hero-button-primary" href="https://chromewebstore.google.com/detail/antidoom/kpibmejclghfaeiaofoijdnagaapomjh" target="_blank" rel="noopener">Download for Chrome</a>
-          <a class="hero-button hero-button-secondary" href="sites.html">Try It</a>
-          <button id="spawnOne" class="hero-button hero-button-secondary" type="button">Launch random popup</button>
-          <button id="shuffleGrid" class="hero-button hero-button-secondary" type="button">Shuffle examples</button>
         </div>
       </section>
 
+      <section class="carousel" aria-label="AntiDoom in the wild">
+        <div class="carousel-viewport">
+          <div class="carousel-track" id="carouselTrack">
+            <img src="img/mockups/fakebook_mockup.png" alt="AntiDoom running on Fakebook">
+            <img src="img/mockups/deadit_mockup.png" alt="AntiDoom running on Deaddit">
+            <img src="img/mockups/instagrim_mockup.png" alt="AntiDoom running on Instagrim">
+            <img src="img/mockups/slacker_news_mockup.png" alt="AntiDoom running on Slacker News">
+          </div>
+          <button class="carousel-arrow carousel-prev" id="carouselPrev" type="button" aria-label="Previous">&#8249;</button>
+          <button class="carousel-arrow carousel-next" id="carouselNext" type="button" aria-label="Next">&#8250;</button>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+        <a class="hero-button hero-button-primary carousel-cta" href="sites.html">See it in action &rarr;</a>
+      </section>
+
       <section class="grid-header">
-        <h2>Example Ad Units</h2>
+        <div class="grid-header-row">
+          <h2>Example Ad Units</h2>
+          <div class="grid-header-actions">
+            <button id="spawnOne" class="hero-button hero-button-secondary" type="button">Launch random popup</button>
+            <button id="shuffleGrid" class="hero-button hero-button-secondary" type="button">Shuffle examples</button>
+          </div>
+        </div>
         <p>Different shapes, same agenda: interrupt the spiral with something sharper than generic positivity.</p>
       </section>
 
       <section class="ad-grid style-gallery" id="adGrid"></section>
+
+      <footer class="site-footer">Created by <a href="https://josephruocco.net" target="_blank" rel="noopener">Joseph Ruocco</a></footer>
     </main>
 
     <template id="popupTemplate">
@@ -61,6 +81,6 @@
       </div>
     </section>
 
-    <script src="demo.js?v=22"></script>
+    <script src="demo.js?v=24"></script>
   </body>
 </html>
