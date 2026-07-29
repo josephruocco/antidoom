@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AntiDoom — Live on your feeds</title>
     <!-- The REAL extension styles, so the demo matches production exactly -->
-    <link rel="stylesheet" href="ad-styles.css?v=20">
-    <link rel="stylesheet" href="sites.css?v=20">
+    <link rel="stylesheet" href="ad-styles.css?v=22">
+    <link rel="stylesheet" href="sites.css?v=22">
   </head>
   <body>
     <!-- Control bar (hide it for clean screenshots) -->
@@ -25,6 +25,7 @@
       </label>
       <button class="ctrl-btn ctrl-primary" id="dropAd">Drop ad</button>
       <button class="ctrl-btn" id="swarm">Swarm</button>
+      <label class="ctrl-num"># <input type="number" id="swarmCount" min="1" max="6" value="4"></label>
       <button class="ctrl-btn" id="overlayGhost">Ghost text</button>
       <button class="ctrl-btn" id="overlayFlip">Flip card</button>
       <button class="ctrl-btn" id="overlayWavy">WordArt</button>
@@ -36,6 +37,6 @@
     <!-- Mock website feed goes here -->
     <div class="site" id="site"></div>
 
-    <script src="sites.js?v=20"></script>
+    <script src="sites.js?v=22"></script>
   </body>
 </html>

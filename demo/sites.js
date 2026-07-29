@@ -340,7 +340,8 @@ document.getElementById("swarm").addEventListener("click", () => {
   const adPool = shuffle([SITE_ADS[currentSite], ...GENERAL_ADS]);
   // Grid has 6 cells; cap the burst by cells, ads, and (in random mode) styles.
   const cap = Math.min(6, adPool.length, sel === "random" ? STYLES.length : 6);
-  const count = Math.min(cap, SWARM_COUNT); // fixed target (capped by what fits)
+  const wanted = parseInt(document.getElementById("swarmCount").value, 10) || SWARM_COUNT;
+  const count = Math.min(cap, Math.max(1, wanted)); // capped by what fits
   // Unique styles in random mode; the chosen style repeated otherwise.
   const styles = sel === "random" ? shuffle(STYLES).slice(0, count) : Array(count).fill(sel);
   const positions = spreadPositions(count);

@@ -39,6 +39,8 @@ body {
 .ctrl-store { margin-left: auto; background: #22c55e; border-color: #16a34a; color: #08210f; text-decoration: none; font-weight: 700; }
 .ctrl-store:hover { background: #1eb455; }
 .ctrl-menu { text-decoration: none; }
+.ctrl-num { display: inline-flex; align-items: center; gap: 5px; color: #fff; font-size: 13px; }
+.ctrl-num input { width: 46px; padding: 5px 6px; border-radius: 6px; border: 1px solid #3a3a4a; background: #23232f; color: #fff; font: inherit; }
 
 /* Demo affordance: ad popups can be dragged around */
 .antidoom-root { cursor: grab; }
