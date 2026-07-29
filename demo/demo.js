@@ -341,21 +341,17 @@ renderGrid();
     'Georgia, "Times New Roman", serif',
     'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif'
   ];
+  const targets = [logo, lede].filter(Boolean);
+  targets.forEach((el) => { el.style.transition = "opacity 0.45s ease"; });
   let i = 0;
-  function flip() {
+  function swap() {
     i = (i + 1) % fonts.length;
-    [[logo, "logo-flip"], [lede, "lede-flip"]].forEach(([el, cls]) => {
-      if (!el) return;
-      el.classList.remove(cls);
-      void el.offsetWidth; // restart the animation
-      el.classList.add(cls);
-    });
+    targets.forEach((el) => { el.style.opacity = "0"; });
     window.setTimeout(() => {
-      if (logo) logo.style.fontFamily = fonts[i];
-      if (lede) lede.style.fontFamily = fonts[i];
-    }, 360); // ~midpoint of the 0.72s flip (edge-on)
+      targets.forEach((el) => { el.style.fontFamily = fonts[i]; el.style.opacity = "1"; });
+    }, 450); // swap while faded out, then fade back in
   }
-  window.setInterval(flip, 2600);
+  window.setInterval(swap, 2600);
 })();
 
 // Intro: bombard the page with ads on load, land on a message, one button clears.
@@ -375,10 +371,9 @@ renderGrid();
       </div></div>`;
   }
 
-  const pool = [
-    ...STYLE_SAMPLES.map(introCardHTML),
-    galleryGhost(), galleryFlip(), galleryWavy()
-  ].sort(() => Math.random() - 0.5);
+  // Only the self-contained card styles: the wavy/flip/ghost overlays are far
+  // wider than a scatter slot and overflow over the page chrome.
+  const pool = STYLE_SAMPLES.map(introCardHTML).sort(() => Math.random() - 0.5);
 
   const vw = window.innerWidth, vh = window.innerHeight;
   const cols = Math.max(3, Math.round(vw / 300));

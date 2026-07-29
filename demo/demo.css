@@ -887,18 +887,6 @@ body {
 .site-footer { text-align: center; padding: 44px 0 32px; color: #666; font-size: 14px; }
 .site-footer a { color: var(--ink); font-weight: 700; }
 
-/* Font-flip: title + tagline flip edge-on and reveal the next font. */
-.logo-flip { animation: logo-flip 0.72s ease-in-out; }
-.lede-flip { animation: lede-flip 0.72s ease-in-out; }
-@keyframes logo-flip {
-  0%, 100% { transform: perspective(350px) rotateX(18deg) skewX(-13deg); }
-  50%      { transform: perspective(350px) rotateX(108deg) skewX(-13deg); }
-}
-@keyframes lede-flip {
-  0%, 100% { transform: perspective(600px) rotateX(0deg); }
-  50%      { transform: perspective(600px) rotateX(90deg); }
-}
-
 /* Intro: bombard the page with ads on load, then one button clears them. */
 body.intro-lock { overflow: hidden; }
 #introSpam {
