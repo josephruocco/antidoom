@@ -384,6 +384,9 @@ renderGrid();
     for (let c = 0; c < cols; c += 1) slots.push([c, r]);
   }
   slots.sort(() => Math.random() - 0.5);
+  // Always fill the top-left corner (it otherwise reads as empty).
+  const tl = slots.findIndex(([c, r]) => c === 0 && r === 0);
+  if (tl > 0) slots.unshift(slots.splice(tl, 1)[0]);
   const count = Math.min(slots.length, 20, pool.length);
 
   const overlay = document.createElement("div");
@@ -396,8 +399,8 @@ renderGrid();
     const ad = document.createElement("div");
     ad.className = "intro-ad";
     ad.style.setProperty("--r", `${(Math.random() * 12 - 6).toFixed(1)}deg`);
-    const left = Math.max(6, Math.min(vw - 306, c * cellW + (cellW - 300) * Math.random()));
-    const top = Math.max(6, Math.min(vh - 120, r * cellH + (cellH - 160) * Math.random()));
+    const left = i === 0 ? 10 : Math.max(6, Math.min(vw - 306, c * cellW + (cellW - 300) * Math.random()));
+    const top = i === 0 ? 12 : Math.max(6, Math.min(vh - 120, r * cellH + (cellH - 160) * Math.random()));
     ad.style.left = `${left}px`;
     ad.style.top = `${top}px`;
     ad.style.animationDelay = `${i * 90}ms`;
