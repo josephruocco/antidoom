@@ -62,12 +62,12 @@ const shuffle = (arr) => {
 const sponsor = () => rand(SPONSOR_LINES);
 
 // ---------------- mock feeds ----------------
-function fbPost(name, avatar, time, text, withImg) {
+function fbPost(name, avatar, time, text, img) {
   return `<article class="post">
     <div class="row"><div class="avatar ${avatar}"></div>
       <div><div class="strong">${name}</div><div class="muted">${time} · 🌍</div></div></div>
     <p style="margin:10px 0 0">${text}</p>
-    ${withImg ? '<div class="ph-img fb-postimg"></div>' : ""}
+    ${img ? `<img class="post-img" src="img/${img}.png" alt="">` : ""}
     <div class="fb-bar"><span>👍 Like</span><span>💬 Comment</span><span>↪ Share</span></div>
   </article>`;
 }
@@ -78,10 +78,11 @@ function facebookFeed() {
       <div class="fb-actions"><div class="fb-pill"></div><div class="fb-pill"></div><div class="fb-pill"></div></div>
     </div>
     <div class="feed">
-      ${fbPost("Mindfulness Coach 🧘", "a5", "2h", "Remember to be PRESENT today! (posted from the couch, 4th hour)", true)}
-      ${fbPost("Definitely Working Rn", "a2", "3h", "10 things you won't BELIEVE are still legal to sell...", false)}
-      ${fbPost("Digital Detox, Day 1", "a4", "5h", "Hot take that will definitely start an argument in the comments 🔥", true)}
-      ${fbPost("Touch Grass Enthusiast", "a3", "6h", "Tag someone who needs to see this!", false)}
+      ${pineappleBanner()}
+      ${fbPost("Mindfulness Coach 🧘", "a5", "2h", "Remember to be PRESENT today! (posted from the couch, 4th hour)", "hike_view")}
+      ${fbPost("Definitely Working Rn", "a2", "3h", "10 things you won't BELIEVE are still legal to sell...", null)}
+      ${fbPost("Digital Detox, Day 1", "a4", "5h", "Hot take that will definitely start an argument in the comments 🔥", "family_backyard")}
+      ${fbPost("Touch Grass Enthusiast", "a3", "6h", "Tag someone who needs to see this!", "dog_rainy_window")}
     </div>`;
 }
 
@@ -105,11 +106,11 @@ function redditFeed() {
     </div>`;
 }
 
-function igPost(user, avatar, cap) {
+function igPost(user, avatar, img, cap) {
   return `<article class="ig-post">
     <div class="ig-head"><div class="ig-ring"><div class="avatar ${avatar}"></div></div>
       <div class="strong">${user}</div><div class="muted" style="margin-left:auto">•••</div></div>
-    <div class="ig-img"></div>
+    <img class="ig-img" src="img/${img}.png" alt="">
     <div class="ig-actions"><span>❤️</span><span>💬</span><span>✈️</span></div>
     <div class="ig-cap"><span class="strong">${user}</span> ${cap}</div>
   </article>`;
@@ -118,9 +119,20 @@ function instagramFeed() {
   return `<div class="ig-top"><div class="ig-logo">Instagrim</div>
       <div class="fb-search" style="max-width:200px">Search</div></div>
     <div class="feed ig-feed">
-      ${igPost("present.over.everything", "a4", "living in the moment ✨🌴 (34 min of trying to get this shot) #blessed #nofilter")}
-      ${igPost("off.the.grid.4real", "a6", "digital detox retreat!! posting from the retreat. constantly. #mindful #unplugged")}
+      ${igPost("present.over.everything", "a4", "beach_feet", "living in the moment ✨🌴 (34 min of trying to get this shot) #blessed #nofilter")}
+      ${igPost("off.the.grid.4real", "a6", "concert_lights", "digital detox retreat!! posting from the retreat. constantly. #mindful #unplugged")}
     </div>`;
+}
+
+// PostHog inside joke: pineapple-on-pizza banner pinned to the top of the feed.
+function pineappleBanner() {
+  return `<div class="pineapple-banner">
+    <img src="img/pineapple_pizza.png" alt="">
+    <div class="pineapple-copy">
+      <strong>Sponsored by Pineapple on Pizza 🍍🍕</strong>
+      <span>The one ad we stand behind. (hi PostHog 👋)</span>
+    </div>
+  </div>`;
 }
 
 function hnItem(rank, title, points, user, time, comments) {
