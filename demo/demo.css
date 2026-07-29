@@ -33,19 +33,30 @@ body {
 
 .hero {
   position: relative;
-  padding: 20px 4px 28px;
+  padding: 28px 28px 34px;
   border: none;
   border-radius: 0;
-  background: none;
   box-shadow: none;
   border-bottom: 3px solid var(--ink);
   text-align: center;
+  /* reversed warm gradient (red/orange now leads into cream) */
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.85), transparent 30%),
+    linear-gradient(310deg, rgba(255, 252, 220, 0.96), rgba(255, 227, 108, 0.95) 45%, rgba(255, 147, 66, 0.96) 80%, rgba(255, 86, 86, 0.94));
 }
 
-/* Keep gallery cards at their natural size — shrinking crushes the shapes'
-   text to one word per line. */
+/* Each gallery card lives in a fixed-width cell so percentage padding on the
+   shape styles resolves against the card width, not the wide gallery. */
 .style-gallery > * {
   flex: 0 0 auto;
+}
+.gallery-item {
+  width: min(420px, 90vw);
+  display: flex;
+  justify-content: center;
+}
+.style-gallery .antidoom-card {
+  width: 100%;
 }
 
 .hero::after {

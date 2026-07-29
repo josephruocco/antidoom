@@ -154,7 +154,7 @@ const STYLE_SAMPLES = [
 function renderGrid() {
   adGrid.innerHTML = "";
 
-  for (const s of STYLE_SAMPLES) {
+  for (const s of [...STYLE_SAMPLES].sort(() => Math.random() - 0.5)) {
     const card = document.createElement("div");
     card.className = "antidoom-card";
     card.setAttribute("data-style", s.style);
@@ -172,7 +172,12 @@ function renderGrid() {
         <button class="antidoom-button antidoom-button-secondary" type="button">Go learn something</button>
         <button class="antidoom-button antidoom-button-snooze" type="button">Snooze 10 min</button>
       </div>`;
-    adGrid.appendChild(card);
+    // Fixed-width cell so shape cards' percentage padding resolves against the
+    // card width (not the wide gallery), otherwise their text collapses.
+    const cell = document.createElement("div");
+    cell.className = "gallery-item";
+    cell.appendChild(card);
+    adGrid.appendChild(cell);
   }
 }
 
@@ -191,38 +196,49 @@ function closePopup(root) {
   repositionStacks();
 }
 
-function spawnPopup(forcedAd) {
-  const ad = forcedAd || randomAd();
-  const fragment = popupTemplate.content.cloneNode(true);
-  const root = fragment.querySelector(".floating-root");
-  const imageWrap = fragment.querySelector(".floating-image-wrap");
-  const kicker = fragment.querySelector(".floating-kicker");
-  const message = fragment.querySelector(".floating-message");
-  const subtext = fragment.querySelector(".floating-subtext");
-  const close = fragment.querySelector(".floating-close");
-  const buttons = fragment.querySelectorAll(".floating-button");
+// Spawn a REAL styled popup (random style), pinned bottom-right so it never
+// covers the hero/buttons.
+function spawnPopup() {
+  const s = STYLE_SAMPLES[Math.floor(Math.random() * STYLE_SAMPLES.length)];
+  document.querySelectorAll(".antidoom-root").forEach((p) => p.remove());
 
-  kicker.textContent = ad.kicker;
-  message.textContent = ad.message;
-  subtext.textContent = ad.subtext;
+  const root = document.createElement("section");
+  root.className = "antidoom-root";
+  root.style.setProperty("--antidoom-rotate", `${(Math.random() * 5 - 2.5).toFixed(2)}deg`);
+  root.innerHTML = `
+    <div class="antidoom-card" data-style="${s.style}" role="dialog" aria-label="Example popup">
+      <div class="antidoom-header"><span>${s.sponsor}</span><button class="antidoom-close" type="button" aria-label="Dismiss">&times;</button></div>
+      <div class="antidoom-body">
+        <div class="antidoom-kicker">${s.kicker}</div>
+        <p class="antidoom-message">${s.message || "A walk would outperform this feed."}</p>
+        <p class="antidoom-subtext">${s.subtext}</p>
+      </div>
+      <div class="antidoom-footer">
+        <button class="antidoom-button antidoom-button-primary" type="button">Close this tab</button>
+        <button class="antidoom-button antidoom-button-secondary" type="button">Go learn something</button>
+        <button class="antidoom-button antidoom-button-snooze" type="button">Snooze 10 min</button>
+      </div>
+    </div>`;
 
-  const position = POSITION_OPTIONS[Math.floor(Math.random() * POSITION_OPTIONS.length)];
-  if (position !== "bottom-right") {
-    root.classList.add(`position-${position}`);
-  }
-
-  close.addEventListener("click", () => closePopup(root));
-  buttons[0].addEventListener("click", () => {
-    closePopup(root);
+  root.querySelector(".antidoom-close").addEventListener("click", () => root.remove());
+  root.querySelector(".antidoom-button-snooze").addEventListener("click", () => root.remove());
+  root.querySelector(".antidoom-button-primary").addEventListener("click", () => {
+    root.remove();
     showCelebration();
   });
-  buttons[1].addEventListener("click", () => {
+  root.querySelector(".antidoom-button-secondary").addEventListener("click", () => {
     window.location.href = educationalUrl();
   });
 
-  document.querySelectorAll(".floating-root").forEach((p) => p.remove());
   document.body.appendChild(root);
-  repositionStacks();
+
+  // Pin it below the hero buttons (right side) so it never covers them.
+  const actions = document.querySelector(".hero-actions");
+  const topY = actions ? Math.max(70, actions.getBoundingClientRect().bottom + 16) : 90;
+  root.style.top = `${topY}px`;
+  root.style.right = "28px";
+  root.style.left = "auto";
+  root.style.bottom = "auto";
 }
 
 function showCelebration() {
