@@ -337,7 +337,7 @@ renderGrid();
   const lede = document.querySelector(".lede");
   if (!logo && !lede) return;
   const fonts = [
-    '"Comic Sans MS", "Comic Sans", cursive',
+    '"Comic Sans MS", "Chalkboard SE", "Comic Neue", "Chalkboard", sans-serif',
     'Georgia, "Times New Roman", serif',
     'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif'
   ];
